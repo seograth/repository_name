@@ -11,7 +11,7 @@ spec:
     targetRevision: HEAD  # Can be set to branch name, tag, or commit hash (HEAD means latest)
   destination:
     server: https://kubernetes.default.svc  # Use https://kubernetes.default.svc if ArgoCD is in-cluster
-    namespace: traefik  # The namespace in your AKS cluster where Traefik will be deployed
+    namespace: traefik-ns  # The namespace in your AKS cluster where Traefik will be deployed
   syncPolicy:
     automated:
       prune: true  # Automatically prune resources that are no longer defined in the repo
