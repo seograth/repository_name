@@ -30,7 +30,7 @@ spec:
 
   syncWindows:           # Optional, used to set specific sync times
     - kind: allow
-      schedule: "*/5 * * * *"  Sync every 5 min
+      schedule: "*/5 * * * *"  #Sync every 5 min
       duration: 5m
       applications:
         - traefik
