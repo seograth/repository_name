@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: traefik
+  namespace: argocd
+spec:
+  project: aks-kluster  # Reference to the ArgoCD Project
+  source:
+    repoURL: https://github.com/seograth/repository_name  # Your GitHub repository URL
+    path: apps/traefik/helm-chart  # Path to Traefik's Helm chart in the repo
+    targetRevision: HEAD  # Can be set to branch name, tag, or commit hash (HEAD means latest)
+  destination:
+    server: https://kubernetes.default.svc  # Use https://kubernetes.default.svc if ArgoCD is in-cluster
+    namespace: traefik  # The namespace in your AKS cluster where Traefik will be deployed
+  syncPolicy:
+    automated:
+      prune: true  # Automatically prune resources that are no longer defined in the repo
+      selfHeal: true  # Automatically apply changes if the live state diverges from the desired state
+    syncWindow:
+      - kind: allow
+        schedule: "*/5 * * * *"  # Sync every 5 minutes
+        duration: 5m
