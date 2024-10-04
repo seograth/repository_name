@@ -1,0 +1,44 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: aks-cluster
+  namespace: argocd
+spec:
+  description: Project for managing applications in the AKS cluster
+  sourceRepos:
+    - https://github.com/seograth/repository_name  # Repository where your manifests live
+  destinations:
+    - namespace: '*'
+      server: https://azure-eu-germany-1-dns-gs89l4np.hcp.germanywestcentral.azmk8s.io  # URL of your AKS cluster
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  namespaceResourceBlacklist:
+    - group: '*'
+      kind: 'Secret'
+  orphanedResources:
+    warn: true
+  roles:
+    - name: devops
+      description: Role for DevOps team
+      policies:
+        - p, proj:aks-cluster:devops, applications, create, *, allow
+        - p, proj:aks-cluster:devops, applications, get, *, allow
+        - p, proj:aks-cluster:devops, applications, delete, *, allow
+      groups:
+        - devops-group
+
+  syncWindows:           # Optional, used to set specific sync times
+    - kind: allow
+      schedule: "*/5 * * * *"  Sync every 5 min
+      duration: 5m
+      applications:
+        - traefik
+        - jenkins
+        - app_pythonas
+
+  # Define resource quotas or limits
+  namespaceResourceQuota:
+    limits:
+      memory: 10Gi
+      cpu: "8"
